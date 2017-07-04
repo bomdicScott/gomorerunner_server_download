@@ -1,0 +1,2 @@
+workout_date,workout_time_sec,laDilutionGrade,LA_dilution_grade,aeroCapacity,aero_capacity,aeroTotalCapacity,aero_total_capacity,valid_calibration,stamina_max_use,stamina_aerobic_max_use,stamina_anaerobic_max_use,answer_breath,answer_muscle,answer_RPE,w_stamina_end,w_stamina_aerobic_end,w_stamina_anaerobic_end,stamina_level,aerobic_level,anaerobic_level
+2017-06-26T13:37:43Z,1498484263,9,9,2351.77,2269.70,2500,2500.00,0,60,9,57,1,1,1,80.78,90.79,88.98,47.34,45.83,47.34
