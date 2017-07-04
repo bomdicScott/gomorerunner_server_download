@@ -18,7 +18,6 @@ from shutil import copyfile
 
 import data_parsing_modules as DPM
 import single_workout_plot as SWP
-import data_import_modules as DIM
 import data_analysis_modules as DAM
 import gomorerunner_server_download_modules as GSDM
 

@@ -12,6 +12,139 @@ from math import radians, cos, sin, asin, sqrt
 from staticmap.staticmap import *
 
 
+def get_fig_2D_route(R_lat, R_lng):
+
+    m = StaticMap(500, 500)
+    point = []
+    for i in range(len(R_lat)):
+        if R_lat[i] > 0:
+            point.append((R_lng[i],R_lat[i]))
+    point = point[::2]
+    for count in range(len(point)-1):
+        color = (255,0,0)
+        width = 2
+        line = Line([point[count],point[count+1]], color, width)
+        m.add_line(line)
+    start_marker = CircleMarker(point[0], 'green', 20)
+    end_marker = CircleMarker(point[-1], 'black', 15)
+    m.add_marker(start_marker)
+    m.add_marker(end_marker)
+
+    fig = m.render()
+
+    return fig
+
+def get_fig_time_speed_alt(X,Y1,Y2):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    ax.plot(X, Y1, 'b', label='Speed')
+
+    ax.set_title('Speed kmph')
+    ax.set_xlabel('time (sec)')
+    ax.set_ylabel('kmph')
+    ax.legend(loc='upper right')
+
+    Xlim = max(X)
+    Y1_max = max(Y1)
+    if Y1_max >= 20:
+        Ylim1 = max(Y1) * 1.3
+    else:
+        Ylim1 = 21
+    
+    Y2_max = max(Y2)
+    if Y2_max >= 250:
+        Ylim2 = Y2_max * 1.3
+    else:
+        Ylim2 = 300
+
+    ax.set_xlim(0, Xlim)
+    ax.set_ylim(0, Ylim1)
+    ax.grid(True)
+    ax2 = ax.twinx()
+    ax2.fill_between(X, 0, Y2, color='c', alpha= 0.5)
+    ax2.set_ylabel('altitude(m)')
+    ax2.set_xlim(0, Xlim)
+    ax2.set_ylim(0, Ylim2)
+
+    return fig
+
+def get_fig_dist_pace_alt(X,Y1,Y2): # km / kmph / m
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    # pace transform from kmph
+    Y1_pace = []
+    for i in range(len(Y1)):
+        if (Y1[i] <= 0):
+            Y1_pace += [100.0]
+        else:
+            Y1_pace += [1000.0 / (Y1[i] / 3.6) / 60.0]  
+    Y1 = Y1_pace
+
+    ax.plot(X, Y1, 'b', label='Pace')
+    ax.set_title('Pace')
+    ax.set_xlabel('distance (km)')
+    ax.set_ylabel('pace (min)')
+    ax.legend(loc='upper right')
+
+    Xlim = max(X)
+    Ylim1 = 10.0
+    Y2_max = max(Y2)
+    if Y2_max >= 250:
+        Ylim2 = Y2_max * 1.3
+    else:
+        Ylim2 = 300
+
+    ax.set_xlim(0, Xlim)
+    ax.set_ylim(Ylim1, 0)
+    ax.grid(True)
+    ax2 = ax.twinx()
+    ax2.fill_between(X, 0, Y2, color='c', alpha= 0.5)
+    ax2.set_ylabel('altitude(m)')
+    ax2.set_xlim(0, Xlim)
+    ax2.set_ylim(0, Ylim2)
+
+    return fig
+
+def get_fig_time_pace_alt(X,Y1,Y2): # km / kmph / m
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    # pace transform from kmph
+    Y1_pace = []
+    for i in range(len(Y1)):
+        if (Y1[i] <= 0):
+            Y1_pace += [100.0]
+        else:
+            Y1_pace += [1000.0 / (Y1[i] / 3.6) / 60.0]  
+    Y1 = Y1_pace
+
+    ax.plot(X, Y1, 'b', label='Pace')
+    ax.set_title('Pace')
+    ax.set_xlabel('time (sec)')
+    ax.set_ylabel('pace (min)')
+    ax.legend(loc='upper right')
+
+    Xlim = max(X)
+    Ylim1 = 10.0
+    Y2_max = max(Y2)
+    if Y2_max >= 250:
+        Ylim2 = Y2_max * 1.3
+    else:
+        Ylim2 = 300
+
+    ax.set_xlim(0, Xlim)
+    ax.set_ylim(Ylim1, 0)
+    ax.grid(True)
+    ax2 = ax.twinx()
+    ax2.fill_between(X, 0, Y2, color='c', alpha= 0.5)
+    ax2.set_ylabel('altitude(m)')
+    ax2.set_xlim(0, Xlim)
+    ax2.set_ylim(0, Ylim2)
+
+    return fig
+
 def haversine(lon1, lat1, lon2, lat2):
     """
     Calculate the great circle distance between two points 
@@ -587,138 +720,9 @@ def get_fig_time_max_burn_alt(X,Y1_1,Y1_2,Y2):
 
     return fig
 
-def get_fig_time_speed_alt(X,Y1,Y2):
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
 
-    ax.plot(X, Y1, 'b', label='Speed')
 
-    ax.set_title('Speed kmph')
-    ax.set_xlabel('time (sec)')
-    ax.set_ylabel('kmph')
-    ax.legend(loc='upper right')
 
-    Xlim = max(X)
-    Y1_max = max(Y1)
-    if Y1_max >= 20:
-        Ylim1 = max(Y1) * 1.3
-    else:
-        Ylim1 = 21
-    
-    Y2_max = max(Y2)
-    if Y2_max >= 250:
-        Ylim2 = Y2_max * 1.3
-    else:
-        Ylim2 = 300
-
-    ax.set_xlim(0, Xlim)
-    ax.set_ylim(0, Ylim1)
-    ax.grid(True)
-    ax2 = ax.twinx()
-    ax2.fill_between(X, 0, Y2, color='c', alpha= 0.5)
-    ax2.set_ylabel('altitude(m)')
-    ax2.set_xlim(0, Xlim)
-    ax2.set_ylim(0, Ylim2)
-
-    return fig
-
-def get_fig_dist_pace_alt(X,Y1,Y2): # km / kmph / m
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-
-    # pace transform from kmph
-    Y1_pace = []
-    for i in range(len(Y1)):
-        if (Y1[i] <= 0):
-            Y1_pace += [100.0]
-        else:
-            Y1_pace += [1000.0 / (Y1[i] / 3.6) / 60.0]  
-    Y1 = Y1_pace
-
-    ax.plot(X, Y1, 'b', label='Pace')
-    ax.set_title('Pace')
-    ax.set_xlabel('distance (km)')
-    ax.set_ylabel('pace (min)')
-    ax.legend(loc='upper right')
-
-    Xlim = max(X)
-    Ylim1 = 10.0
-    Y2_max = max(Y2)
-    if Y2_max >= 250:
-        Ylim2 = Y2_max * 1.3
-    else:
-        Ylim2 = 300
-
-    ax.set_xlim(0, Xlim)
-    ax.set_ylim(Ylim1, 0)
-    ax.grid(True)
-    ax2 = ax.twinx()
-    ax2.fill_between(X, 0, Y2, color='c', alpha= 0.5)
-    ax2.set_ylabel('altitude(m)')
-    ax2.set_xlim(0, Xlim)
-    ax2.set_ylim(0, Ylim2)
-
-    return fig
-
-def get_fig_time_pace_alt(X,Y1,Y2): # km / kmph / m
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-
-    # pace transform from kmph
-    Y1_pace = []
-    for i in range(len(Y1)):
-        if (Y1[i] <= 0):
-            Y1_pace += [100.0]
-        else:
-            Y1_pace += [1000.0 / (Y1[i] / 3.6) / 60.0]  
-    Y1 = Y1_pace
-
-    ax.plot(X, Y1, 'b', label='Pace')
-    ax.set_title('Pace')
-    ax.set_xlabel('time (sec)')
-    ax.set_ylabel('pace (min)')
-    ax.legend(loc='upper right')
-
-    Xlim = max(X)
-    Ylim1 = 10.0
-    Y2_max = max(Y2)
-    if Y2_max >= 250:
-        Ylim2 = Y2_max * 1.3
-    else:
-        Ylim2 = 300
-
-    ax.set_xlim(0, Xlim)
-    ax.set_ylim(Ylim1, 0)
-    ax.grid(True)
-    ax2 = ax.twinx()
-    ax2.fill_between(X, 0, Y2, color='c', alpha= 0.5)
-    ax2.set_ylabel('altitude(m)')
-    ax2.set_xlim(0, Xlim)
-    ax2.set_ylim(0, Ylim2)
-
-    return fig
-
-def get_fig_2D_route(R_lat, R_lng):
-
-    m = StaticMap(500, 500)
-    point = []
-    for i in range(len(R_lat)):
-        if R_lat[i] > 0:
-            point.append((R_lng[i],R_lat[i]))
-    point = point[::2]
-    for count in range(len(point)-1):
-        color = (255,0,0)
-        width = 2
-        line = Line([point[count],point[count+1]], color, width)
-        m.add_line(line)
-    start_marker = CircleMarker(point[0], 'green', 20)
-    end_marker = CircleMarker(point[-1], 'black', 15)
-    m.add_marker(start_marker)
-    m.add_marker(end_marker)
-
-    fig = m.render()
-
-    return fig
 
 def get_fig_time_stamina_WpPtc(w_t, stamina_ptc_list,aerobic_ptc_list, anaerobic_ptc_list, WpPtc_list):
 
