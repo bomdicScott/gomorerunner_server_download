@@ -57,7 +57,7 @@ range_end_date = datetime.datetime(2017, 6, 26, 23, 59, 59)
 #range_end_date = datetime.datetime(2015, 1, 3, 23, 59, 59)
 
 re_download = 1
-raw_download_dir = "./test_data/"
+raw_download_dir = "../test_data/"
 
 ########### server setting ###########
 response = urllib2.urlopen(v2_backend_URL_root + 'user.php?user_id=' + user_ID + '&submit=Submit')
